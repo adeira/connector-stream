@@ -1,0 +1,9 @@
+parameters:
+	staticRouting:
+		/: Adeira\Connector\Stream\StreamEndpoint
+
+
+services:
+	http.request:
+		dynamic: yes
+	router: Adeira\Connector\Stream\Application(%staticRouting%, ...)
