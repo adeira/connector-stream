@@ -1,9 +1,20 @@
-parameters:
-	staticRouting:
-		/: Adeira\Connector\Stream\StreamEndpoint
+extensions:
+	stream: Adeira\Connector\Stream\Infrastructure\DI\Nette\Extension
+
+
+http:
+	headers:
+		Access-Control-Allow-Origin: http://127.0.0.1:1234
 
 
 services:
 	http.request:
 		dynamic: yes
-	router: Adeira\Connector\Stream\Application(%staticRouting%, ...)
+
+
+stream:
+	GET:
+		'': Adeira\Connector\Stream\Infrastructure\Delivery\ViewHomepage
+		'hls/(?P<identifier>[a-z0-9-]+)/(?P<file>[a-z0-9-]+.(m3u8|ts))': Adeira\Connector\Stream\Infrastructure\Delivery\ViewHlsPlaylist
+	POST:
+		consumeStream: Adeira\Connector\Stream\Infrastructure\Delivery\ConsumeStream
