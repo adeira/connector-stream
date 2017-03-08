@@ -1,6 +1,6 @@
 <?php declare(strict_types = 1);
 
-namespace Adeira\Connector\Stream\Infrastructure\Delivery;
+namespace Adeira\Connector\Stream\Infrastructure\Delivery\Http;
 
 use Nette\DI;
 use Nette\Http;
@@ -29,12 +29,13 @@ final class Application
 		$url = $this->httpRequest->getUrl();
 		$slug = rtrim(substr($url->getPath(), strrpos($url->getScriptPath(), '/') + 1), '/');
 
-		$params = $url->getQueryParameters();
 		try {
+
+			$params = $url->getQueryParameters();
 			foreach ($this->routingTable[$this->httpRequest->getMethod()] as $staticSlug => $staticEndpoint) {
 				if (preg_match('~^' . rtrim($staticSlug, '/') . '$~', $slug, $matches)) {
 					foreach ($matches as $param => $value) {
-						if (is_string($param)) {
+						if (is_string($param)) { // named parameters in route mask
 							$params[$param] = $value;
 						}
 					}
@@ -48,6 +49,7 @@ final class Application
 				'Route not found for specified HTTP request.',
 				Http\IResponse::S404_NOT_FOUND
 			);
+
 		} catch (\Adeira\Connector\Stream\Infrastructure\Delivery\PublicException $exc) {
 			$this->httpResponse->setCode($exc->getCode());
 			echo '<pre>' . json_encode((object)[

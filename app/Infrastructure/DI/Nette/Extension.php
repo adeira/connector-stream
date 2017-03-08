@@ -24,7 +24,7 @@ final class Extension extends \Nette\DI\CompilerExtension
 
 		$builder
 			->addDefinition($this->prefix('application'))
-			->setClass(\Adeira\Connector\Stream\Infrastructure\Delivery\Application::class)
+			->setClass(\Adeira\Connector\Stream\Infrastructure\Delivery\Http\Application::class)
 			->setArguments([
 				'routingTable' => $config,
 			]);
