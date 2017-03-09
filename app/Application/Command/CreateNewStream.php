@@ -2,12 +2,23 @@
 
 namespace Adeira\Connector\Stream\Application;
 
+use Adeira\Connector\Stream\{
+	IAllStreams, Stream
+};
+
 final class CreateNewStream
 {
 
+	private $allStreams;
+
+	public function __construct(IAllStreams $allStreams)
+	{
+		$this->allStreams = $allStreams;
+	}
+
 	public function __invoke()
 	{
-		//TODO: uložit někam záznam streamu a vrátit novou URL m3u8
+		$this->allStreams->add(new Stream);
 	}
 
 }

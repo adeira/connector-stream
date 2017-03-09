@@ -7,7 +7,6 @@ final class ViewHlsPlaylist
 
 	public function __invoke(string $identifier, string $file): IResponse
 	{
-		//FIXME: autorizace?
 		return new HlsResponse($identifier, $file);
 	}
 

@@ -17,7 +17,7 @@ final class HlsResponse implements IResponse
 
 	public function emit()
 	{
-		header('Content-Disposition: attachment'); //FIXME
+		header('Content-Disposition: attachment');
 		echo file_get_contents(__DIR__ . "/../../../../../streams/$this->identifier/$this->file"); //FIXME: nemusí existovat
 	}
 

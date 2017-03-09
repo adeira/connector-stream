@@ -17,4 +17,9 @@ final class JsonResponse implements IResponse
 		echo '<pre>' . json_encode($this->payload, JSON_PRETTY_PRINT) . '</pre>';
 	}
 
+	public function payload()
+	{
+		return $this->payload;
+	}
+
 }

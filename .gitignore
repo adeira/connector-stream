@@ -1,1 +1,3 @@
+/tests/**/*.actual
+/tests/**/*.expected
 /vendor/
