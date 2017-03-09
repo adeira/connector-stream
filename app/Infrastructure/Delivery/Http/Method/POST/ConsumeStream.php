@@ -20,6 +20,7 @@ final class ConsumeStream
 		if (!$source) {
 			throw new PublicException("POST body must contain 'source' field with original stream destination.");
 		}
+
 		return new JsonResponse((object)[
 			'source' => $source,
 			'hls' => 'TODO', //TODO

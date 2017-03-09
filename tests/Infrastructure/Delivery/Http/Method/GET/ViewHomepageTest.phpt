@@ -23,8 +23,8 @@ final class ViewHomepageTest extends \Tester\TestCase
 	public function test_response_payload()
 	{
 		$repository = new InMemoryAllStreams;
-		$repository->add(new Stream);
-		$repository->add(new Stream);
+		$repository->add(Stream::register());
+		$repository->add(Stream::register());
 		$endpoint = new ViewHomepage($repository);
 
 		$payload = $endpoint()->payload();

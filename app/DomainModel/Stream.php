@@ -10,9 +10,15 @@ final class Stream
 
 	private $identifier;
 
-	public function __construct()
+	private function __construct()
 	{
-		$this->identifier = Uuid::uuid4();
+	}
+
+	public static function register(?UuidInterface $identifier = NULL): self
+	{
+		$stream = new self;
+		$stream->identifier = $identifier ?: Uuid::uuid4();
+		return $stream;
 	}
 
 	public function identifier(): UuidInterface

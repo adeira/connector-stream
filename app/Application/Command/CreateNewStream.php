@@ -18,7 +18,7 @@ final class CreateNewStream
 
 	public function __invoke()
 	{
-		$this->allStreams->add(new Stream);
+		$this->allStreams->add(Stream::register());
 	}
 
 }
