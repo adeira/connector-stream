@@ -2,13 +2,28 @@
 
 namespace Adeira\Connector\Stream\Infrastructure\Delivery\Http;
 
+use Adeira\Connector\Stream\IAllStreams;
+
 final class ViewHomepage
 {
 
+	private $allStreams;
+
+	public function __construct(IAllStreams $allStreams)
+	{
+		$this->allStreams = $allStreams;
+	}
+
 	public function __invoke(): IResponse
 	{
-		//TODO: print allowed streams
-		return new JsonResponse(['ok']);
+		$payload = [];
+		/** @var \Adeira\Connector\Stream\Stream $stream */
+		foreach ($this->allStreams->fetchAll() as $stream) {
+			$payload[] = [
+				'id' => $stream->identifier()->toString(),
+			];
+		}
+		return new JsonResponse($payload);
 	}
 
 }

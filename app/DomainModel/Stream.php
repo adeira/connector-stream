@@ -15,7 +15,7 @@ final class Stream
 		$this->identifier = Uuid::uuid4();
 	}
 
-	public function id(): UuidInterface
+	public function identifier(): UuidInterface
 	{
 		return $this->identifier;
 	}

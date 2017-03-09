@@ -16,11 +16,11 @@ final class CreateNewStreamTest extends \Tester\TestCase
 	public function test_that_it_works()
 	{
 		$repository = new InMemoryAllStreams;
-		Assert::same([], $repository->dumpMemory());
+		Assert::same([], $repository->fetchAll());
 		$command = new CreateNewStream($repository);
 		$command(); // __invoke
 
-		$memory = $repository->dumpMemory();
+		$memory = $repository->fetchAll();
 		Assert::count(1, $memory);
 		Assert::type(Stream::class, reset($memory));
 	}
