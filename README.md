@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.org/adeira/connector-stream.svg?branch=master)](https://travis-ci.org/adeira/connector-stream)
+
 If you want to start streaming just send POST to the `consumeStream` with body containing stream source ([httpie](https://github.com/jkbrzt/httpie) example):
 
 ```
