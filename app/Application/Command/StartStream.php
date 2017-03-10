@@ -5,8 +5,9 @@ namespace Adeira\Connector\Stream\Application;
 use Adeira\Connector\Stream\{
 	IAllStreams, Stream
 };
+use Ramsey\Uuid\UuidInterface;
 
-final class CreateNewStream
+final class StartStream
 {
 
 	private $allStreams;
@@ -16,9 +17,11 @@ final class CreateNewStream
 		$this->allStreams = $allStreams;
 	}
 
-	public function __invoke()
+	public function __invoke(UuidInterface $streamIdentifier)
 	{
-		$this->allStreams->add(Stream::register());
+		//TODO: transakce
+		$registeredStream = Stream::register($streamIdentifier);
+		$this->allStreams->add($registeredStream);
 	}
 
 }

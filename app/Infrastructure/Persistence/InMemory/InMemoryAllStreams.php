@@ -3,6 +3,7 @@
 namespace Adeira\Connector\Stream\Infrastructure\Persistence;
 
 use Adeira\Connector\Stream\Stream;
+use Ramsey\Uuid\UuidInterface;
 
 final class InMemoryAllStreams implements \Adeira\Connector\Stream\IAllStreams
 {
@@ -11,7 +12,17 @@ final class InMemoryAllStreams implements \Adeira\Connector\Stream\IAllStreams
 
 	public function add(Stream $aStream): void
 	{
-		$this->memory[] = $aStream;
+		$this->memory[$aStream->identifier()->toString()] = $aStream;
+	}
+
+	public function remove(Stream $aStream): void
+	{
+		unset($this->memory[$aStream->identifier()->toString()]);
+	}
+
+	public function ofId(UuidInterface $uuid): ?Stream
+	{
+		return $this->memory[$uuid->toString()] ?? NULL;
 	}
 
 	public function fetchAll(): array

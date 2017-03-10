@@ -15,10 +15,17 @@ final class HlsResponse implements IResponse
 		$this->file = $file;
 	}
 
-	public function emit()
+	public function emit(\Nette\Http\IResponse $httpResponse)
 	{
-		header('Content-Disposition: attachment');
-		echo file_get_contents(__DIR__ . "/../../../../../streams/$this->identifier/$this->file"); //FIXME: nemusí existovat
+		$filePath = __DIR__ . "/../../../../../streams/$this->identifier/$this->file"; //FIXME
+
+		if (file_exists($filePath)) {
+			$httpResponse->setContentType('application/octet-stream');
+			$httpResponse->setHeader('Content-Disposition', 'attachment');
+			echo file_get_contents($filePath);
+		}
+
+		throw new PublicException('Stream playlist not found.');
 	}
 
 }

@@ -23,7 +23,7 @@ final class ViewHomepage
 				'id' => $stream->identifier()->toString(),
 			];
 		}
-		return new JsonResponse($payload);
+		return new SuccessResponse($payload);
 	}
 
 }

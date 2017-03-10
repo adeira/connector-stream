@@ -2,16 +2,21 @@
 
 namespace Adeira\Connector\Stream\Infrastructure\Delivery\Http;
 
+use Adeira\Connector\Stream\Application\StartStream;
 use Nette\Http\IRequest;
+use Ramsey\Uuid\Uuid;
 
-final class ConsumeStream
+final class StartStreamEndpoint
 {
 
 	private $httpRequest;
 
-	public function __construct(IRequest $httpRequest)
+	private $startStream;
+
+	public function __construct(?IRequest $httpRequest, ?StartStream $startStream)
 	{
 		$this->httpRequest = $httpRequest;
+		$this->startStream = $startStream;
 	}
 
 	public function __invoke(): IResponse
@@ -21,7 +26,10 @@ final class ConsumeStream
 			throw new PublicException("POST body must contain 'source' field with original stream destination.");
 		}
 
-		return new JsonResponse((object)[
+		$identifier = Uuid::uuid4();
+		$this->startStream->__invoke($identifier);
+
+		return new SuccessResponse([
 			'source' => $source,
 			'hls' => 'TODO', //TODO
 		]);
