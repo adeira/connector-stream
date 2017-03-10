@@ -3,7 +3,7 @@
 use Adeira\Connector\Stream\Infrastructure\Delivery\Http\PublicException;
 use Tester\Assert;
 
-require __DIR__ . '/../../../../bootstrap.php';
+require __DIR__ . '/../../../../testsSetup.php';
 
 /**
  * @testCase

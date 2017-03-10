@@ -41,6 +41,7 @@ final class Application
 					}
 					$endpoint = $this->container->getByType($staticEndpoint, TRUE);
 					$response = $this->invokeEndpoint($endpoint, $params);
+					$this->httpResponse->setCode(Http\IResponse::S200_OK);
 					$response->emit($this->httpResponse);
 					return;
 				}
@@ -98,11 +99,7 @@ final class Application
 			} elseif ($type === 'array') {
 				$res[$i] = [];
 			} else {
-				throw new \Nette\InvalidArgumentException(sprintf(
-					'Missing parameter $%s required by %s()',
-					$name,
-					($method instanceof \ReflectionMethod ? $method->getDeclaringClass()->getName() . '::' : '') . $method->getName()
-				));
+				throw new PublicException(sprintf("Missing parameter '%s'.", $name));
 			}
 		}
 		return $res;

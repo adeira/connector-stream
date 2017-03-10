@@ -6,7 +6,7 @@ use Adeira\Connector\Stream\Infrastructure\Persistence\InMemoryAllStreams;
 use Adeira\Connector\Stream\Stream;
 use Tester\Assert;
 
-require __DIR__ . '/../../../../../bootstrap.php';
+require __DIR__ . '/../../../../../testsSetup.php';
 
 /**
  * @testCase

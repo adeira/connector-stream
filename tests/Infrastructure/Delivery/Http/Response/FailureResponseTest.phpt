@@ -4,7 +4,7 @@ use Adeira\Connector\Stream\Infrastructure\Delivery\Http\FailureResponse;
 use Nette\Http\Response;
 use Tester\Assert;
 
-require __DIR__ . '/../../../../../bootstrap.php';
+require __DIR__ . '/../../../../testsSetup.php';
 
 /**
  * @testCase

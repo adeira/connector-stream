@@ -4,7 +4,7 @@ use Adeira\Connector\Stream\Stream;
 use Ramsey\Uuid\Uuid;
 use Tester\Assert;
 
-require __DIR__ . '/../../bootstrap.php';
+require __DIR__ . '/../testsSetup.php';
 
 /**
  * @testCase

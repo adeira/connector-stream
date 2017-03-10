@@ -10,7 +10,7 @@ use Nette\Http\Request;
 use Nette\Http\UrlScript;
 use Tester\Assert;
 
-require __DIR__ . '/../../../../../bootstrap.php';
+require __DIR__ . '/../../../../../testsSetup.php';
 
 /**
  * @testCase

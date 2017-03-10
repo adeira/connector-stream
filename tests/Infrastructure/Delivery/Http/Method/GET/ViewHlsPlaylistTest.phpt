@@ -4,7 +4,7 @@ use Adeira\Connector\Stream\Infrastructure\Delivery\Http\HlsResponse;
 use Adeira\Connector\Stream\Infrastructure\Delivery\Http\ViewHlsPlaylist;
 use Tester\Assert;
 
-require __DIR__ . '/../../../../../bootstrap.php';
+require __DIR__ . '/../../../../../testsSetup.php';
 
 /**
  * @testCase
