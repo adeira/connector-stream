@@ -4,14 +4,15 @@
   "license": "MIT",
   "require": {
     "php": ">= 7.1",
+    "doctrine/instantiator": "^1.0",
     "nette/bootstrap": "^2.4.2",
     "nette/caching": "^2.5",
     "nette/di": "^2.4",
     "nette/finder": "^2.4",
     "nette/http": "^2.4",
     "nette/robot-loader": "^2.4",
-    "nette/security": "^2.4",
     "nette/utils": "^2.4",
+    "ocramius/generated-hydrator": "dev-master",
     "ramsey/uuid": "^3.5",
     "symfony/process": "^3.2",
     "tracy/tracy": "^2.4"

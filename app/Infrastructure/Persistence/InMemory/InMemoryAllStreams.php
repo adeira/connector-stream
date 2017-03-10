@@ -27,7 +27,7 @@ final class InMemoryAllStreams implements \Adeira\Connector\Stream\IAllStreams
 
 	public function fetchAll(): array
 	{
-		return $this->memory;
+		return array_values($this->memory);
 	}
 
 }
