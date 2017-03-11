@@ -1,3 +1,8 @@
+parameters:
+	streamDir: %rootDir%/streams
+	database: sqlite:%rootDir%/database.sqlite3
+
+
 extensions:
 	stream: Adeira\Connector\Stream\Infrastructure\DI\Nette\Extension
 
@@ -10,15 +15,17 @@ http:
 services:
 	http.request:
 		dynamic: yes
-	- Adeira\Connector\Stream\Infrastructure\Persistence\InMemoryAllStreams #FIXME: nahradit konkrétní implementací
+	- Adeira\Connector\Stream\Infrastructure\Persistence\SqlAllStreams(PDO(%database%))
 	- Adeira\Connector\Stream\Application\StartStream
 	- Adeira\Connector\Stream\Application\StopStream
+	- Adeira\Connector\Stream\Application\GetStreamLocation
+	- Adeira\Connector\Stream\LocationFactory
 
 
 stream:
 	GET:
 		'': Adeira\Connector\Stream\Infrastructure\Delivery\Http\ViewHomepage
-		'hls/(?P<identifier>[a-z0-9-]+)/(?P<file>[a-z0-9-]+.(m3u8|ts))': Adeira\Connector\Stream\Infrastructure\Delivery\Http\ViewHlsPlaylist
+		'hls/(?P<identifier>[a-zA-Z0-9-]+)/(?P<file>[a-z0-9-]+.(m3u8|ts))': Adeira\Connector\Stream\Infrastructure\Delivery\Http\ViewHlsPlaylist(%streamDir%)
 	POST:
 		startStream: Adeira\Connector\Stream\Infrastructure\Delivery\Http\StartStreamEndpoint
 		stopStream: Adeira\Connector\Stream\Infrastructure\Delivery\Http\StopStreamEndpoint

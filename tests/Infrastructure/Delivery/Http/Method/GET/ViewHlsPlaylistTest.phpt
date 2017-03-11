@@ -2,6 +2,7 @@
 
 use Adeira\Connector\Stream\Infrastructure\Delivery\Http\HlsResponse;
 use Adeira\Connector\Stream\Infrastructure\Delivery\Http\ViewHlsPlaylist;
+use Nette\Http\Response;
 use Tester\Assert;
 
 require __DIR__ . '/../../../../../testsSetup.php';
@@ -14,17 +15,17 @@ final class ViewHlsPlaylistTest extends \Tester\TestCase
 
 	public function test_response_type()
 	{
-		$endpoint = new ViewHlsPlaylist;
+		$endpoint = new ViewHlsPlaylist('streamDir');
 		Assert::type(HlsResponse::class, $endpoint('device1', 'stream.m3u8'));
 	}
 
-	public function test_response_payload()
+	public function test_response_exception_payload()
 	{
-		\Tester\Environment::skip('HlsResponse is not ready yet.');
-
-		$endpoint = new ViewHlsPlaylist;
-		$response = $endpoint('device1', 'stream.m3u8');
-		Assert::same([], $response->emit());
+		$endpoint = new ViewHlsPlaylist('streamDir');
+		Assert::exception(function() use ($endpoint) {
+			$response = $endpoint('device1', 'stream.m3u8');
+			$response->emit(new Response);
+		}, \Adeira\Connector\Stream\Infrastructure\Delivery\Http\PublicException::class, 'Stream file not found.');
 	}
 
 }

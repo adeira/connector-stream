@@ -39,7 +39,11 @@ final class Application
 							$params[$param] = $value;
 						}
 					}
-					$endpoint = $this->container->getByType($staticEndpoint, TRUE);
+					if (is_string($staticEndpoint)) {
+						$endpoint = $this->container->getByType($staticEndpoint, TRUE);
+					} else {
+						$endpoint = $staticEndpoint;
+					}
 					$response = $this->invokeEndpoint($endpoint, $params);
 					$this->httpResponse->setCode(Http\IResponse::S200_OK);
 					$response->emit($this->httpResponse);

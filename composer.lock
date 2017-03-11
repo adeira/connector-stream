@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "content-hash": "aa0e3789b6970943d2de5a718d1ce087",
+    "content-hash": "38d48ab1fc67250a2749faa3a251430c",
     "packages": [
         {
             "name": "doctrine/instantiator",
@@ -59,6 +59,55 @@
                 "instantiate"
             ],
             "time": "2015-06-14T21:17:01+00:00"
+        },
+        {
+            "name": "moontoast/math",
+            "version": "1.1.2",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/ramsey/moontoast-math.git",
+                "reference": "c2792a25df5cad4ff3d760dd37078fc5b6fccc79"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/ramsey/moontoast-math/zipball/c2792a25df5cad4ff3d760dd37078fc5b6fccc79",
+                "reference": "c2792a25df5cad4ff3d760dd37078fc5b6fccc79",
+                "shasum": ""
+            },
+            "require": {
+                "ext-bcmath": "*",
+                "php": ">=5.3.3"
+            },
+            "require-dev": {
+                "jakub-onderka/php-parallel-lint": "^0.9.0",
+                "phpunit/phpunit": "^4.7|>=5.0 <5.4",
+                "satooshi/php-coveralls": "^0.6.1",
+                "squizlabs/php_codesniffer": "^2.3"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Moontoast\\Math\\": "src/Moontoast/Math/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "Apache-2.0"
+            ],
+            "authors": [
+                {
+                    "name": "Ben Ramsey",
+                    "email": "ben@benramsey.com",
+                    "homepage": "https://benramsey.com"
+                }
+            ],
+            "description": "A mathematics library, providing functionality for large numbers",
+            "homepage": "https://github.com/ramsey/moontoast-math",
+            "keywords": [
+                "bcmath",
+                "math"
+            ],
+            "time": "2017-02-16T16:54:46+00:00"
         },
         {
             "name": "nette/bootstrap",
@@ -814,6 +863,52 @@
                 "random"
             ],
             "time": "2017-03-03T20:43:42+00:00"
+        },
+        {
+            "name": "pascaldevink/shortuuid",
+            "version": "1.0.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/pascaldevink/shortuuid.git",
+                "reference": "50bf6f0924887466e937e1fa2713c7ce13fd297e"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/pascaldevink/shortuuid/zipball/50bf6f0924887466e937e1fa2713c7ce13fd297e",
+                "reference": "50bf6f0924887466e937e1fa2713c7ce13fd297e",
+                "shasum": ""
+            },
+            "require": {
+                "moontoast/math": "^1.1",
+                "php": ">=5.6",
+                "ramsey/uuid": "^3.0"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "^5.0"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "PascalDeVink\\ShortUuid\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Pascal de Vink",
+                    "email": "pascal@ticketswap.com"
+                }
+            ],
+            "description": "PHP 5.6+ library that generates concise, unambiguous, URL-safe UUIDs",
+            "keywords": [
+                "guid",
+                "identifier",
+                "uuid"
+            ],
+            "time": "2015-11-03T12:06:27+00:00"
         },
         {
             "name": "ramsey/uuid",

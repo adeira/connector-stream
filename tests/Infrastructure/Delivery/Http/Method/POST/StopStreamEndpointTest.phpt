@@ -23,7 +23,7 @@ final class StopStreamEndpointTest extends \Tester\TestCase
 	{
 		$httpRequest = new Request(new UrlScript(''), NULL, ['identifier' => '00000000-0000-0000-0000-000000000001']);
 		$repository = new InMemoryAllStreams;
-		$repository->add(Stream::register(Uuid::fromString('00000000-0000-0000-0000-000000000001')));
+		$repository->add(Stream::register('rtsp://a', Uuid::fromString('00000000-0000-0000-0000-000000000001')));
 		$newStreamCommand = new StopStream($repository);
 
 		$endpoint = new StopStreamEndpoint($httpRequest, $newStreamCommand);
@@ -34,7 +34,7 @@ final class StopStreamEndpointTest extends \Tester\TestCase
 	{
 		$httpRequest = new Request(new UrlScript(''), NULL, ['identifier' => '00000000-0000-0000-0000-000000000001']);
 		$repository = new InMemoryAllStreams;
-		$repository->add(Stream::register(Uuid::fromString('00000000-0000-0000-0000-000000000001')));
+		$repository->add(Stream::register('rtsp://b', Uuid::fromString('00000000-0000-0000-0000-000000000001')));
 		$newStreamCommand = new StopStream($repository);
 
 		$endpoint = new StopStreamEndpoint($httpRequest, $newStreamCommand);
@@ -49,7 +49,7 @@ final class StopStreamEndpointTest extends \Tester\TestCase
 	{
 		$httpRequest = new Request(new UrlScript(''), NULL, ['identifier' => '00000000-0000-0000-0000-000000000001']);
 		$repository = new InMemoryAllStreams;
-		$repository->add(Stream::register(Uuid::fromString('00000000-0000-0000-0000-000000000001')));
+		$repository->add(Stream::register('rtsp://c', Uuid::fromString('00000000-0000-0000-0000-000000000001')));
 		$newStreamCommand = new StopStream($repository);
 		$endpoint = new StopStreamEndpoint($httpRequest, $newStreamCommand);
 

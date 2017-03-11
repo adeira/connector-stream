@@ -17,14 +17,14 @@ final class InMemoryAllStreamsTest extends \Tester\TestCase
 	{
 		$repository = new InMemoryAllStreams;
 		Assert::same([], $repository->fetchAll());
-		$repository->add($stream = Stream::register($uuid = Uuid::uuid4()));
+		$repository->add($stream = Stream::register('rtsp://a', $uuid = Uuid::uuid4()));
 		Assert::equal([$stream], $repository->fetchAll());
 	}
 
 	public function test_that_remove_works()
 	{
 		$repository = new InMemoryAllStreams;
-		$repository->add($stream = Stream::register($uuid = Uuid::uuid4()));
+		$repository->add($stream = Stream::register('rtsp://b', $uuid = Uuid::uuid4()));
 		Assert::equal([$stream], $repository->fetchAll());
 		$repository->remove($repository->ofId($uuid));
 		Assert::same([], $repository->fetchAll());

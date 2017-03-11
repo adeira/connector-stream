@@ -1,48 +1,100 @@
 #!/usr/bin/env php
 <?php declare(strict_types = 1);
 
-require __DIR__ . '/../vendor/autoload.php';
-
+use Adeira\Connector\Stream\IAllStreams;
+use Adeira\Connector\Stream\LocationFactory;
 use Symfony\Component\Process\ProcessBuilder;
 
-//TODO: ffmpeg -i rtsp://test:test@192.168.0.123:554/live/ch01_0 -hls_flags delete_segments+append_list -use_localtime 1 stream.m3u8
+/**
+ * ffmpeg
+ *   -i rtsp://test:test@192.168.0.123:554/live/ch01_0
+ *   -hls_flags delete_segments+append_list
+ *   -use_localtime 1
+ *   -loglevel verbose
+ *   -nostats
+ * stream.m3u8
+ */
+final class StreamsProcessor
+{
 
-$sources = [ //TODO
-	'ch1' => 'rtsp://test:test@192.168.0.123:554/live/ch01_0',
-	'ch2' => 'rtsp://test:test@192.168.0.123:554/live/ch02_0',
-];
+	private $streams;
 
-$tasks = [];
-foreach ($sources as $identifier => $inputStream) {
-	$destination = __DIR__ . '/../streams/' . $identifier;
-	if (!is_dir($destination)) {
-		mkdir($destination);
+	/**
+	 * @var \Adeira\Connector\Stream\LocationFactory
+	 */
+	private $locationFactory;
+
+	/**
+	 * @var string
+	 */
+	private $streamsOutputDirectory;
+
+	public function __construct(IAllStreams $streams, LocationFactory $locationFactory, string $streamsOutputDirectory)
+	{
+		$this->streams = $streams;
+		$this->locationFactory = $locationFactory;
+		$this->streamsOutputDirectory = $streamsOutputDirectory;
 	}
-	$binary = __DIR__ . '/../bin/ffmpeg';
 
-	$processBuilder = new ProcessBuilder;
-	$processBuilder->setPrefix($binary);
-	$processBuilder->setArguments([
-		'-i', $inputStream,
-		'-hls_flags', 'delete_segments+append_list',
-		'-use_localtime', 1,
-		"$destination/stream.m3u8",
-	]);
-	$process = $processBuilder->getProcess();
-	$process->setTty(TRUE);
-	$process->start();
-	$tasks[] = $process;
-}
+	public function run(): void
+	{
+		//TODO: musí jít přidat další streamy za běhu
 
-while (TRUE) {
-	sleep(10); //FIXME: why is it ignored?
-	$running = TRUE;
-	foreach ($tasks as $proc) {
-		if (!$proc->isRunning()) { //FIXME: prints output ?!
-			$running &= FALSE;
+		$sources = [];
+		$streams = $this->streams->fetchAll();
+		foreach ($streams as $stream) {
+			$location = $this->locationFactory->createForStream($stream);
+			$sources[$location->directory()] = $stream->rtspSource();
+		}
+
+		$tasks = [];
+		foreach ($sources as $identifier => $inputStream) {
+			$destination = $this->streamsOutputDirectory . DIRECTORY_SEPARATOR . $identifier;
+			if (!is_dir($destination)) {
+				mkdir($destination);
+			}
+			$binary = __DIR__ . '/../bin/ffmpeg';
+
+			$processBuilder = new ProcessBuilder;
+			$processBuilder->setPrefix($binary);
+			$processBuilder->setArguments([
+				'-i', $inputStream,
+				'-hls_flags', 'delete_segments+append_list',
+				'-use_localtime', 1,
+				'-loglevel', 'verbose',
+				'-nostats',
+				"$destination/stream.m3u8",
+			]);
+
+			$process = $processBuilder->getProcess();
+			$process->setTty(TRUE);
+			$process->start();
+
+			$tasks[] = $process;
+		}
+
+		while (TRUE) { // main process must be alive longer than child processes
+			sleep(1);
+			$running = TRUE;
+			foreach ($tasks as $proc) {
+				if (!$proc->isRunning()) {
+					$running &= FALSE;
+				}
+			}
+			if (!$running) {
+				break;
+			}
 		}
 	}
-	if (!$running) {
-		break;
-	}
+
 }
+
+/** @var Nette\DI\Container $dic */
+$dic = require __DIR__ . '/../bootstrap.php';
+
+$parameters = $dic->getParameters();
+(new StreamsProcessor(
+	$dic->getByType(\Adeira\Connector\Stream\IAllStreams::class),
+	$dic->getByType(\Adeira\Connector\Stream\LocationFactory::class),
+	$parameters['streamDir']
+))->run();

@@ -17,7 +17,6 @@ final class StopStream
 
 	public function __invoke(UuidInterface $streamIdentifier)
 	{
-		//TODO: transakce
 		$stream = $this->allStreams->ofId($streamIdentifier);
 		if ($stream === NULL) {
 			throw new \Adeira\Connector\Stream\Infrastructure\Delivery\Http\PublicException("Stream with identifier '$streamIdentifier' is not registered!");

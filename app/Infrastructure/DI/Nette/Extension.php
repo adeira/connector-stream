@@ -18,7 +18,11 @@ final class Extension extends \Nette\DI\CompilerExtension
 		$counter = 0;
 		foreach ($config as $httpMethod => $endpoints) {
 			foreach ($endpoints as $endpoint) {
-				$builder->addDefinition($this->prefix('endpoint_' . ++$counter))->setClass($endpoint);
+				\Nette\DI\Compiler::loadDefinitions($builder, [
+					$this->prefix('endpoint_' . ++$counter) => [
+						'class' => $endpoint,
+					],
+				]);
 			}
 		}
 

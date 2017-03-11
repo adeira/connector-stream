@@ -17,10 +17,9 @@ final class StartStream
 		$this->allStreams = $allStreams;
 	}
 
-	public function __invoke(UuidInterface $streamIdentifier)
+	public function __invoke(UuidInterface $streamIdentifier, string $rtspSource)
 	{
-		//TODO: transakce
-		$registeredStream = Stream::register($streamIdentifier);
+		$registeredStream = Stream::register($rtspSource, $streamIdentifier);
 		$this->allStreams->add($registeredStream);
 	}
 

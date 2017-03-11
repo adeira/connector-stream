@@ -15,8 +15,9 @@ Expected response is:
 ```json
 {
   "data": {
-    "source": "rtsp:\/\/user:pass@192.168.0.123:554\/live\/ch01_0",
-    "hls": "stream.m3u8"
+    "source": "rtsp://user:pass@192.168.0.123:554/live/ch01_0",
+    "id": "678afdcb-d0de-4b79-b522-f1d22e3b2959",
+    "hls": "http://stream.adeira.loc/hls/dwGC3oTFrqZZWvMFYhrC8d/stream.m3u8"
   }
 }
 ```
@@ -27,19 +28,19 @@ HLS is newly created stream playlist.
 
 Send POST to the `stopStream` endpoint with body containing stream identifier:
 
-    http -f post http://stream.adeira.loc/stopStream identifier=00000000-0000-0000-0000-000000000001
+    http -f post http://stream.adeira.loc/stopStream identifier=678afdcb-d0de-4b79-b522-f1d22e3b2959
 
-## Stream processing
+Response:
 
-To consume all registered streams you should run this command in CLI:
+```json
+{
+  "data": {
+    "identifier": "678afdcb-d0de-4b79-b522-f1d22e3b2959"
+  }
+}
+```
 
-    bin/consumeStreams
-
-It uses [FFmpeg](https://johnvansickle.com/ffmpeg/) under the hood so it **must be installed** otherwise it won't work.
-
-## Errors
-
-Errors are returned in format similar to GraphQL. There is few examples:
+Possible errors:
 
 ```json
 {
@@ -61,6 +62,18 @@ Errors are returned in format similar to GraphQL. There is few examples:
 }
 ```
 
+## Stream processing
+
+To consume all registered streams you should run this command in CLI:
+
+    bin/consumeStreams
+
+It uses [FFmpeg](https://johnvansickle.com/ffmpeg/) under the hood so it **must be installed** otherwise it won't work.
+
+## Server error
+
+Errors are returned in format similar to GraphQL. There is example of server error:
+
 ```json
 {
   "errors": [
@@ -70,3 +83,5 @@ Errors are returned in format similar to GraphQL. There is few examples:
   ]
 }
 ```
+
+(return code 500)

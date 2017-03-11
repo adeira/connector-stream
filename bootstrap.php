@@ -30,4 +30,8 @@ $configurator->addServices([
 	'http.request' => $requestFactory->createHttpRequest(),
 ]);
 
+$configurator->addDynamicParameters([
+	'rootDir' => __DIR__,
+]);
+
 return $configurator->createContainer();

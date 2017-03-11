@@ -19,7 +19,8 @@ final class SqlAllStreams implements \Adeira\Connector\Stream\IAllStreams
 		$this->pdo->setAttribute(\PDO::ATTR_ERRMODE, \PDO::ERRMODE_EXCEPTION);
 		$this->pdo->exec('
 			CREATE TABLE IF NOT EXISTS streams (
-				uuid TEXT NOT NULL
+				uuid TEXT NOT NULL,
+				rtsp TEXT NOT NULL
 			);
 			CREATE INDEX IF NOT EXISTS idx_streams_uuid ON streams(uuid);
 			CREATE UNIQUE INDEX IF NOT EXISTS uidx_streams_uuid ON streams(uuid);
@@ -28,8 +29,14 @@ final class SqlAllStreams implements \Adeira\Connector\Stream\IAllStreams
 
 	public function add(Stream $aStream): void
 	{
-		$statement = $this->pdo->prepare('INSERT INTO streams (uuid) VALUES (:uuid)');
-		$statement->execute([':uuid' => $aStream->identifier()]);
+		$statement = $this->pdo->prepare('
+			INSERT INTO streams (uuid, rtsp)
+			VALUES (:uuid, :rtsp)
+		');
+		$statement->execute([
+			':uuid' => $aStream->identifier(),
+			':rtsp' => $aStream->rtspSource(),
+		]);
 	}
 
 	public function remove(Stream $aStream): void
@@ -43,7 +50,8 @@ final class SqlAllStreams implements \Adeira\Connector\Stream\IAllStreams
 		$statement = $this->pdo->prepare('SELECT * FROM streams WHERE uuid = :uuid');
 		$statement->execute([':uuid' => $uuid->toString()]);
 
-		return $this->fillUpEntity($statement->fetch(\PDO::FETCH_ASSOC));
+		$data = $statement->fetch(\PDO::FETCH_ASSOC);
+		return $data ? $this->fillUpEntity($data) : NULL;
 	}
 
 	public function fetchAll(): array
@@ -66,7 +74,9 @@ final class SqlAllStreams implements \Adeira\Connector\Stream\IAllStreams
 		$instantiator = new \Doctrine\Instantiator\Instantiator;
 		$hydratorClass = (new \GeneratedHydrator\Configuration(Stream::class))->createFactory()->getHydratorClass();
 		return (new $hydratorClass)->hydrate([
+			// entity property => PDO row
 			'identifier' => Uuid::fromString($row['uuid']),
+			'rtspSource' => $row['rtsp'],
 		], $instantiator->instantiate(Stream::class));
 	}
 

@@ -7,7 +7,7 @@ before_script:
   - travis_retry composer install --prefer-dist
 
 script:
-  - vendor/bin/tester tests/ -s
+  - vendor/bin/tester tests/ -s -C
 
 cache:
   directories:

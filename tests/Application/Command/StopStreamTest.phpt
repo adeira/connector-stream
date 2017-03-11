@@ -18,9 +18,9 @@ final class StopStreamTest extends \Tester\TestCase
 	{
 		$repository = new InMemoryAllStreams;
 		Assert::count(0, $repository->fetchAll());
-		$repository->add(Stream::register($id_1 = Uuid::uuid4()));
+		$repository->add(Stream::register('rtsp://a', $id_1 = Uuid::uuid4()));
 		Assert::count(1, $repository->fetchAll());
-		$repository->add($stream_2 = Stream::register($id_2 = Uuid::uuid4()));
+		$repository->add($stream_2 = Stream::register('rtsp://b', $id_2 = Uuid::uuid4()));
 		Assert::count(2, $repository->fetchAll());
 
 		$stop = new StopStream($repository);

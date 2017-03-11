@@ -3,6 +3,7 @@
 namespace Adeira\Connector\Stream\Infrastructure\Delivery\Http;
 
 use Adeira\Connector\Stream\Application\StartStream;
+use Adeira\Connector\Stream\Application\GetStreamLocation;
 use Nette\Http\IRequest;
 use Ramsey\Uuid\Uuid;
 
@@ -13,10 +14,13 @@ final class StartStreamEndpoint
 
 	private $startStream;
 
-	public function __construct(?IRequest $httpRequest, ?StartStream $startStream)
+	private $getStreamLocation;
+
+	public function __construct(?IRequest $httpRequest, ?StartStream $startStream, GetStreamLocation $getStreamLocation)
 	{
 		$this->httpRequest = $httpRequest;
 		$this->startStream = $startStream;
+		$this->getStreamLocation = $getStreamLocation;
 	}
 
 	public function __invoke(): IResponse
@@ -27,11 +31,13 @@ final class StartStreamEndpoint
 		}
 
 		$identifier = Uuid::uuid4();
-		$this->startStream->__invoke($identifier);
+		$this->startStream->__invoke($identifier, $source);
 
+		$location = $this->getStreamLocation->__invoke($identifier);
 		return new SuccessResponse([
+			'id' => $identifier->toString(),
 			'source' => $source,
-			'hls' => 'TODO', //TODO
+			'hls' => $location->playlistPublicPath(),
 		]);
 	}
 

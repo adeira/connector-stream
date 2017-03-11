@@ -19,7 +19,7 @@ final class StartStreamTest extends \Tester\TestCase
 		$repository = new InMemoryAllStreams;
 		Assert::same([], $repository->fetchAll());
 		$command = new StartStream($repository);
-		$command(Uuid::uuid4()); // __invoke
+		$command(Uuid::uuid4(), 'rtsp://a'); // __invoke
 
 		$memory = $repository->fetchAll();
 		Assert::count(1, $memory);
