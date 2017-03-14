@@ -68,7 +68,7 @@ To consume all registered streams you should run this command in CLI:
 
     bin/consumeStreams
 
-It uses [FFmpeg](https://johnvansickle.com/ffmpeg/) under the hood so it **must be installed** otherwise it won't work.
+It uses [System program execution](http://php.net/manual/en/book.exec.php) under the hood so it **must be enabled** otherwise it won't work. It also uses FFmpeg but it's distributed with the code so you don't have to care about it.
 
 ## Server error
 
@@ -84,4 +84,4 @@ Errors are returned in format similar to GraphQL. There is example of server err
 }
 ```
 
-(return code 500)
+(returns code 500)
