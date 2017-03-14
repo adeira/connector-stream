@@ -17,6 +17,9 @@ use Symfony\Component\Process\ProcessBuilder;
 final class StreamsProcessor
 {
 
+	/**
+	 * @var \Adeira\Connector\Stream\IAllStreams
+	 */
 	private $streams;
 
 	/**
@@ -29,6 +32,8 @@ final class StreamsProcessor
 	 */
 	private $streamsOutputDirectory;
 
+	private $runningProcesses = [];
+
 	public function __construct(IAllStreams $streams, LocationFactory $locationFactory, string $streamsOutputDirectory)
 	{
 		$this->streams = $streams;
@@ -38,53 +43,104 @@ final class StreamsProcessor
 
 	public function run(): void
 	{
-		//TODO: musí jít přidat další streamy za běhu
+		$sources = $this->findNewProcesses($this->runningProcesses);
+		$this->startProcesses($sources);
+		$this->waitForProcesses();
+	}
 
+	private function findNewProcesses(array $knownProcesses)
+	{
 		$sources = [];
 		$streams = $this->streams->fetchAll();
 		foreach ($streams as $stream) {
 			$location = $this->locationFactory->createForStream($stream);
 			$sources[$location->directory()] = $stream->rtspSource();
 		}
+		return array_diff_key($sources, $knownProcesses);
+	}
 
-		$tasks = [];
+	/**
+	 * @return \Symfony\Component\Process\Process[]
+	 */
+	private function findRemovedProcesses(array $knownProcesses): array
+	{
+		$sources = [];
+		$streams = $this->streams->fetchAll();
+		foreach ($streams as $stream) {
+			$location = $this->locationFactory->createForStream($stream);
+			$sources[$location->directory()] = $stream->rtspSource();
+		}
+		return array_diff_key($knownProcesses, $sources);
+	}
+
+	/**
+	 * @param array $sources [ID => rtsp://]
+	 */
+	private function startProcesses(array $sources)
+	{
 		foreach ($sources as $identifier => $inputStream) {
 			$destination = $this->streamsOutputDirectory . DIRECTORY_SEPARATOR . $identifier;
 			if (!is_dir($destination)) {
 				mkdir($destination);
 			}
-			$binary = __DIR__ . '/../bin/ffmpeg';
 
-			$processBuilder = new ProcessBuilder;
-			$processBuilder->setPrefix($binary);
-			$processBuilder->setArguments([
-				'-i', $inputStream,
-				'-hls_flags', 'delete_segments+append_list',
-				'-use_localtime', 1,
-				'-loglevel', 'verbose',
-				'-nostats',
-				"$destination/stream.m3u8",
-			]);
-
-			$process = $processBuilder->getProcess();
-			$process->setTty(TRUE);
+			$process = $this->buildProcess($inputStream, $destination);
 			$process->start();
 
-			$tasks[] = $process;
+			$this->runningProcesses[$identifier] = $process;
 		}
+	}
 
-		while (TRUE) { // main process must be alive longer than child processes
-			sleep(1);
+	private function waitForProcesses()
+	{
+		do { // main process must be alive longer than child processes
 			$running = TRUE;
-			foreach ($tasks as $proc) {
+			foreach ($this->runningProcesses as $procKey => $proc) {
 				if (!$proc->isRunning()) {
+					unset($this->runningProcesses[$procKey]);
 					$running &= FALSE;
 				}
 			}
 			if (!$running) {
-				break;
+				break; // break only if all processes are stoped
 			}
-		}
+
+			sleep(1);
+
+			// new stream has been added during stream consuming
+			$newProcesses = $this->findNewProcesses($this->runningProcesses);
+			$this->startProcesses($newProcesses);
+
+			// stream has been removed during stream consuming
+			$deprecatedProcesses = $this->findRemovedProcesses($this->runningProcesses);
+			if ($deprecatedProcesses) {
+				foreach ($deprecatedProcesses as $processKey => $process) {
+					unset($this->runningProcesses[$processKey]);
+					echo 'Stopping removed stream process PID ' . $process->getPid() . PHP_EOL;
+					$process->stop();
+				}
+			}
+		} while (TRUE);
+	}
+
+	private function buildProcess(string $inputStream, string $destination)
+	{
+		$binary = __DIR__ . '/../bin/ffmpeg';
+
+		$processBuilder = new ProcessBuilder;
+		$processBuilder->setPrefix($binary);
+		$processBuilder->setArguments([
+			'-i', $inputStream,
+			'-hls_flags', 'delete_segments+append_list',
+			'-use_localtime', 1,
+			'-loglevel', 'verbose',
+			'-nostats',
+			"$destination/stream.m3u8",
+		]);
+
+		$process = $processBuilder->getProcess();
+		$process->setTty(TRUE);
+		return $process;
 	}
 
 }
