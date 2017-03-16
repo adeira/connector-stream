@@ -26,7 +26,7 @@ final class Location
 
 	public function playlistPublicPath(): string
 	{
-		return $this->url->getHostUrl() . $this->basePath() . '/stream.m3u8';
+		return $this->basePath() . '/stream.m3u8';
 	}
 
 	public function directory(): string

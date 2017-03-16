@@ -17,7 +17,7 @@ Expected response is:
   "data": {
     "source": "rtsp://user:pass@192.168.0.123:554/live/ch01_0",
     "id": "678afdcb-d0de-4b79-b522-f1d22e3b2959",
-    "hls": "http://stream.adeira.loc/hls/dwGC3oTFrqZZWvMFYhrC8d/stream.m3u8"
+    "hls": "/hls/dwGC3oTFrqZZWvMFYhrC8d/stream.m3u8"
   }
 }
 ```
