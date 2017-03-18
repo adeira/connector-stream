@@ -15,13 +15,13 @@ final class ViewHlsPlaylistTest extends \Tester\TestCase
 
 	public function test_response_type()
 	{
-		$endpoint = new ViewHlsPlaylist('streamDir');
+		$endpoint = new ViewHlsPlaylist(__DIR__);
 		Assert::type(HlsResponse::class, $endpoint('device1', 'stream.m3u8'));
 	}
 
 	public function test_response_exception_payload()
 	{
-		$endpoint = new ViewHlsPlaylist('streamDir');
+		$endpoint = new ViewHlsPlaylist(__DIR__);
 		Assert::exception(function() use ($endpoint) {
 			$response = $endpoint('device1', 'stream.m3u8');
 			$response->emit(new Response);
